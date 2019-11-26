@@ -1,0 +1,34 @@
+{
+    "name": "nash/event-working",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Nash",
+            "email": "896076336@qq.com"
+        }
+    ],
+    "require": {
+        "php": "^7.2.9",
+        "ext-json": "*",
+        "ext-openssl": "*",
+        "ext-posix": "*",
+        "phpseclib/phpseclib": "^2.0",
+        "symfony/console": "^4.3",
+        "hassankhan/config": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Iwan\\": "src"
+        }
+    },
+    "repositories": {
+        "packagist": {
+            "type": "composer",
+            "url": "https://mirrors.aliyun.com/composer/"
+        }
+    },
+    "require-dev": {
+        "eaglewu/swoole-ide-helper": "dev-master"
+    }
+}

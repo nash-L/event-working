@@ -1,0 +1,18 @@
+#!/usr/bin/env php
+<?php
+use Symfony\Component\Console\Application;
+use Iwan\Command\InitCommand;
+use Iwan\Command\ServiceCommand;
+
+define('BIN_DIR', realpath(__DIR__));
+
+require BIN_DIR . '/../vendor/autoload.php';
+
+$application = new Application('iwan', 'v1.0.0');
+
+$application->addCommands([
+    new InitCommand(),
+    new ServiceCommand()
+]);
+
+$application->run();
