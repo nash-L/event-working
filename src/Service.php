@@ -8,6 +8,11 @@ use Swoole\Process;
 class Service
 {
     /**
+     * @var string
+     */
+    private $pidFile = 'tmp/pid.txt';
+
+    /**
      * @var array
      */
     private $processList;
@@ -104,7 +109,7 @@ class Service
      */
     private function processWait()
     {
-        $this->workspace->echo('tmp/pid.txt', $this->manager_pid);
+        $this->workspace->echo($this->pidFile, $this->manager_pid);
         Process::signal(SIGCHLD, function () { $this->rebootProcess(); }); // 进程回收
         Process::signal(SIGTERM, function () { $this->stopProcess(); }); // 进程终止
         Event::wait(); // 事件轮询
@@ -115,7 +120,7 @@ class Service
      */
     public function stop()
     {
-        Process::kill($this->workspace->cat('tmp/pid.txt'), SIGTERM);
+        Process::kill($this->workspace->cat($this->pidFile), SIGTERM);
     }
 
     /**
@@ -125,7 +130,7 @@ class Service
     {
         $this->stop();
         while (true) {
-            if (!Process::kill($this->workspace->cat('tmp/pid.txt'), 0)) {
+            if (!Process::kill($this->workspace->cat($this->pidFile), 0)) {
                 break;
             }
         }

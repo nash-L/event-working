@@ -15,6 +15,7 @@ class Crypt
      * @var array
      */
     private $keys;
+
     /**
      * @var Directory
      */

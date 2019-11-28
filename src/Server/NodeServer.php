@@ -2,20 +2,24 @@
 namespace Iwan\Server;
 
 use Iwan\Event\NodeEvent;
-use Iwan\Util\Directory;
-use phpseclib\Crypt\RSA;
+use Iwan\Util\Crypt;
+use Iwan\Throwable\DirectoryException;
 use Swoole\Server;
 
 class NodeServer extends AbstractServer
 {
-    /**
-     * @var string
-     */
-    private $privateKey;
+    private $crypt;
 
+    /**
+     * NodeServer constructor.
+     * @param string $ip
+     * @param int $port
+     * @throws DirectoryException
+     */
     public function __construct(string $ip, int $port)
     {
         parent::__construct($ip, $port, 'node');
+        $this->crypt = Crypt::load($this->workspace);
     }
 
     /**
@@ -24,15 +28,29 @@ class NodeServer extends AbstractServer
      */
     public function start(bool $daemon = false)
     {
-        // TODO: Implement start() method.
+        $server = new Server($this->ip, $this->port, SWOOLE_PROCESS, SWOOLE_SOCK_UDP);
+        $server->on('Start', function (Server $server) {
+            return $this->onStart($server);
+        });
+        $server->on('Packet', function (Server $server, string $data, array $client_info) {
+            return $this->onPacket($server, $data, $client_info);
+        });
     }
 
-    /**
-     * @return string
-     */
-    public function getPrivateKey(): string
+    private function onStart(Server $server)
     {
-        return $this->privateKey;
+        $event = NodeEvent::create($this, ['public_key' => $this->crypt->getPublicKey()]);
+        $data = ['event' => serialize($event)];
+        $data['sign'] = $this->crypt->sign($data['event']);
+        $server->sendto('ip', 'port', $this->crypt->encrypt(serialize($data), 'publicKey'));
+    }
+
+    private function onPacket(Server $server, string $data, array $client_info)
+    {
+        $data = unserialize($this->crypt->decrypt($data));
+        if ($this->crypt->verify($data['event'], $data['sign'], 'publicKey')) {
+            $event = unserialize($data['event']);
+        }
     }
 
     /**
