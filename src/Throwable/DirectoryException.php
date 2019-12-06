@@ -1,5 +1,5 @@
 <?php
-namespace Iwan\Throwable;
+namespace iWan\Throwable;
 
 use Exception;
 

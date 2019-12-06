@@ -5,27 +5,26 @@
     "authors": [
         {
             "name": "Nash",
-            "email": "896076336@qq.com"
+            "email": "18695616095@163.com"
         }
     ],
     "require": {
-        "php": "^7.2.9",
+        "php": "^7.2.5",
         "ext-json": "*",
-        "ext-openssl": "*",
-        "ext-posix": "*",
+        "ext-swoole": "^4.0.0",
+        "symfony/console": "^5.0",
         "phpseclib/phpseclib": "^2.0",
-        "symfony/console": "^4.3",
-        "hassankhan/config": "^2.1"
-    },
-    "autoload": {
-        "psr-4": {
-            "Iwan\\": "src"
-        }
+        "symfony/filesystem": "^5.0"
     },
     "repositories": {
         "packagist": {
             "type": "composer",
             "url": "https://mirrors.aliyun.com/composer/"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "iWan\\": "src/"
         }
     },
     "require-dev": {
